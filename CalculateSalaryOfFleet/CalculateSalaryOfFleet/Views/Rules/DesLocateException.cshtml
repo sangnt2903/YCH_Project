@@ -1,0 +1,42 @@
+﻿@model IEnumerable<CalculateSalaryOfFleet.Models.DesLocateException>
+
+@{
+    ViewData["Title"] = "DesLocateException";
+    Layout = "~/Views/Shared/_frontEnd.cshtml";
+}
+    <div class="container">
+        <h2>Cấu hình khu vực ngoại lệ</h2>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.DeslocationName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.DeslocationFullName)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DeslocationName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DeslocationFullName)
+                        </td>
+                        <td>
+                            <a asp-action="EditDesLocateException" asp-route-id="@item.DesLocationNo">Sửa</a> |
+                            <a asp-action="Delete" asp-route-id="@item.DesLocationNo">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>

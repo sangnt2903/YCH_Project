@@ -1,0 +1,58 @@
+﻿@model IEnumerable<CalculateSalaryOfFleet.Models.Excels>
+
+@{
+    ViewData["Title"] = "Danh sách các file excel đã import";
+}
+
+<div style="text-align:center"><h2>DANH SÁCH CÁC FILE EXCEL ĐÃ UPLOAD</h2></div>
+<div style="text-align: end; margin: 10px;">
+    @if (ViewBag.ImportSuccess != null)
+    {
+        {
+            <div class="alert alert-info">@ViewBag.ImportSuccess</div>
+        }
+    }
+    @if (ViewBag.Error != null)
+    {
+        {
+            <div class="alert alert-danger">@ViewBag.Error</div>
+        }
+    }
+    <form asp-action="UpLoadExcel" class="form-inline form-group" enctype="multipart/form-data">
+        <div class="form-group mb-2">
+            <label for="staticEmail2" class="sr-only">Tên file</label>
+            <input type="file" readonly class="form-control-plaintext" name="fExcel" value="Chọn một file để upload...">
+        </div>
+        <button type="submit" class="btn btn-primary mb-2">Upload</button>
+    </form>
+</div>
+<div>
+    <table class="table table-responsive table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col" class="col-md-1">#</th>
+                <th scope="col" class="col-md-6">Tên file</th>
+                <th scope="col" class="col-md-3">Ngày import</th>
+                <th scope="col" class="col-md-2">Import dữ liệu</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                var i = 1;
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <th scope="row">@i</th>
+                        <td>@item.ExcelFileName</td>
+                        <td>@item.ExcelUploadedDate.Value.ToShortDateString()</td>  
+                        <td><a asp-action="ImportRawData" asp-route-excelCode="@item.ExcelCode" class="glyphicon glyphicon-import"></a></td>  
+                    </tr>
+                    i++;
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+

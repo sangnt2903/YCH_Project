@@ -1,0 +1,53 @@
+﻿@model CalculateSalaryOfFleet.Models.Rules
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_frontEnd.cshtml";
+}
+
+<h2>Chỉnh sửa</h2>
+
+<h4>Chỉnh sửa cấu hình rules</h4>
+<hr />
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="RuleId" />
+                <div class="form-group">
+                    <label asp-for="RuleFrom" class="control-label"></label>
+                    <input asp-for="RuleFrom" class="form-control" />
+                    <span asp-validation-for="RuleFrom" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="RuleTo" class="control-label"></label>
+                    <input asp-for="RuleTo" class="form-control" />
+                    <span asp-validation-for="RuleTo" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="RuleNumber" class="control-label"></label>
+                    <input asp-for="RuleNumber" class="form-control" />
+                    <span asp-validation-for="RuleNumber" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="MoneyFirstJob" class="control-label"></label>
+                    <input asp-for="MoneyFirstJob" class="form-control" />
+                    <span asp-validation-for="MoneyFirstJob" class="text-danger"></span>
+                </div>
+                <div class="row">
+                    <span>
+                        <a asp-action="Index" class="btn btn-warning">Quay lại trang</a>
+                    </span>
+                    <span class="form-group">
+                        <input type="submit" value="Lưu" class="btn btn-primary" />
+                    </span>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    
+</div>
+
+

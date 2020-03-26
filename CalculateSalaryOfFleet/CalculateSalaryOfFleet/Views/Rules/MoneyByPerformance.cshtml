@@ -1,0 +1,58 @@
+﻿@model IEnumerable<CalculateSalaryOfFleet.Models.MoneyJob>
+
+@{
+    ViewData["Title"] = "MoneyByPerformance";
+    Layout = "~/Views/Shared/_frontEnd.cshtml";
+}
+
+<div style="text-align:center"><h2>CẤU HÌNH CÁC HỆ SỐ TÀI</h2></div>
+
+@*<div style="margin-bottom: 10px;text-align: center">
+    <a class="btn btn-primary" asp-action="Create"><i class="fa fa-plus"></i>&nbsp; Tạo mới</a>
+</div>*@
+<div class="container">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th style="text-align:center">
+                    Mã hệ số
+                </th>
+                <th style="text-align:center">
+                    Thứ tự chuyến
+                </th>
+                <th style="text-align:center">
+                    Mô tả
+                </th>
+                <th style="text-align:center">
+                    Số tiền (VNĐ)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td style="text-align:center">
+                        @Html.DisplayFor(modelItem => item.Id)
+                    </td>
+                    <td style="text-align:center">
+                        @Html.DisplayFor(modelItem => item.JobOrder)
+                    </td>
+                    <td style="text-align:center">
+                        @Html.DisplayFor(modelItem => item.DescriptionJobOrder)
+                    </td>
+                    <td style="text-align:center">
+                        @item.PerformenceMoney.ToString("##,#")
+                    </td>
+                    <td style="text-align:center">
+                        @Html.ActionLink("Sửa", "EditMoneyByPerformance", new { id = item.Id }) |
+                        @Html.ActionLink("Xóa", "Delete", new { id = item.Id })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+

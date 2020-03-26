@@ -1,0 +1,49 @@
+﻿@model IEnumerable<CalculateSalaryOfFleet.Models.TruckWeightType>
+
+@{
+    ViewData["Title"] = "TruckWeightType";
+    Layout = "~/Views/Shared/_frontEnd.cshtml";
+}
+
+
+
+    <div class="container">
+        <h2>Chỉnh sửa tải trọng xe</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Loại vận tải
+                    </th>
+                    <th>
+                        Tải trọng từ
+                    </th>
+                    <th>
+                        Tải trọng đến
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TruckWeightType1)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.WeightFrom)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.WeightTo)
+                        </td>
+                        <td>
+                            <a asp-action="EditTruckWeightType" asp-route-id="@item.TruckWeightTypeId">Sửa</a> |
+                            <a asp-action="#" asp-route-id="@item.TruckWeightTypeId">Xóa</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+

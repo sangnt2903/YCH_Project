@@ -1,0 +1,38 @@
+﻿@model CalculateSalaryOfFleet.Models.DesLocateException
+
+@{
+    ViewData["Title"] = "EditDesLocateException";
+    Layout = "~/Views/Shared/_frontEnd.cshtml";
+}
+
+
+    <div class="container">
+        <h2>Chỉnh sửa</h2>
+
+        <h4>Chỉnh sửa địa điểm ngoại lệ</h4>
+        <hr />
+        <div class="col-md-4">
+            <form asp-action="EditDesLocateException">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="DesLocationNo" />
+                <div class="form-group">
+                    <label asp-for="DeslocationName" class="control-label"></label>
+                    <input asp-for="DeslocationName" class="form-control" />
+                    <span asp-validation-for="DeslocationName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DeslocationFullName" class="control-label"></label>
+                    <input asp-for="DeslocationFullName" class="form-control" />
+                    <span asp-validation-for="DeslocationFullName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Lưu" class="btn btn-default" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+<div>
+    <a asp-action="DesLocateException">Back to List</a>
+</div>
+

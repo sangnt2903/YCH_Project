@@ -1,0 +1,62 @@
+﻿@model IEnumerable<CalculateSalaryOfFleet.Models.Rules>
+
+@{
+    ViewData["Title"] = "Config Rules";
+}
+
+    <div style="text-align:center"><h2>CẤU HÌNH CÁC HỆ SỐ TÀI</h2></div>
+
+<div style="margin-bottom: 10px;text-align: center">
+    <a class="btn btn-primary" asp-action="Create"><i class="fa fa-plus"></i>&nbsp; Tạo mới</a>
+</div>
+<div class="container">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th style="text-align:center">
+                    Mã hệ số
+                </th>
+                <th style="text-align:center">
+                    Từ
+                </th>
+                <th style="text-align:center">
+                    Đến
+                </th>
+                <th style="text-align:center">
+                    Hệ số tương ứng
+                </th>
+                <th style="text-align:center">
+                    Số tiền (VNĐ)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td style="text-align:center">
+                        @Html.DisplayFor(modelItem => item.RuleId)
+                    </td>
+                    <td style="text-align:center">
+                        @Html.DisplayFor(modelItem => item.RuleFrom)
+                    </td>
+                    <td style="text-align:center">
+                        @Html.DisplayFor(modelItem => item.RuleTo)
+                    </td>
+                    <td style="text-align:center">
+                        @Html.DisplayFor(modelItem => item.RuleNumber)
+                    </td>
+                    <td style="text-align:center">
+                        @item.MoneyFirstJob.ToString("##,#")
+                    </td>
+                    <td style="text-align:center">
+                        @Html.ActionLink("Sửa", "Edit", new { id = item.RuleId }) |
+                        @Html.ActionLink("Xóa", "Delete", new { id = item.RuleId })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+

@@ -1,0 +1,127 @@
+﻿@model IEnumerable<CalculateSalaryOfFleet.Models.DataResult>
+@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@{
+
+    ViewData["Title"] = "Report";
+}
+
+<div style="text-align:center"><h2>Báo cáo thông kê số Jobs và Trips của tài xế</h2></div>
+<div class="row" style="margin-bottom: 10px; text-align: center">
+    <form asp-action="GetDataReportByFilter" method="GET" class="form-group">
+        <label>Số điện thoại tài xế (+84****):</label>
+        <input type="text" class="input-sm" name="driverIcNo" />
+        <label>Từ ngày</label>
+        <input type="text" class="date input-sm" id="start" name="startDate" />
+        <label>Đến ngày</label>
+        <input type="text" class="date input-sm" id="end" name="endDate" />
+        <label>Đơn vị vận chuyển</label>
+        <select name="transportAgent" class="input-sm">
+            @foreach (var tr in ViewData["transportAgent"] as List<string>)
+            {
+                if (tr == "All")
+                {
+                    <option value="">@tr</option>
+                }
+                else
+                {
+                    <option value="@tr">@tr</option>
+                }
+            }
+        </select>
+        <input class="btn btn-primary" type="submit" name="submit" value="Lọc" />
+    </form>
+    <a asp-action="ExportReportToExcel" class="btn btn-success"><span class="glyphicon glyphicon-export"></span>&nbsp;Xuất báo cáo thông kê số tài</a>
+</div>
+
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+    $(function () {
+        $("#start").datepicker();
+    });
+
+    $(function () {
+        $("#end").datepicker();
+    });
+</script>
+
+@if (!String.IsNullOrEmpty(HttpContextAccessor.HttpContext.Session.GetString("filter")))
+{
+    <div>
+        &nbsp; &nbsp; Thông tin lọc : @HttpContextAccessor.HttpContext.Session.GetString("filter")
+    </div>
+}
+
+<div class="container-fluid">
+    <table class="table table-responsive table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Mã tài xế</th>
+                <th scope="col">Tên tài xế</th>
+                <th scope="col">Đơn vị vận chuyển</th>
+                <th scope="col">Ngày</th>
+                <th scope="col">Tổng số Job</th>
+                <th scope="col">Tổng số Drop point</th>
+                @{
+                    for (int j = 1; j <= 15; j++)
+                    {
+                        <th scope="col">Drop Point per Job #@j</th>
+                    }
+                }
+                <th scope="col">Hệ số tài</th>
+                <th>Xem chi tiết</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @{
+                var i = 1;
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <th scope="row">@i</th>
+                        <td>@item.DriverIcNo</td>
+                        <td>@item.DriverName</td>
+                        <td>@item.TransportAgent</td>
+                        <td>@item.ATD_Date</td>
+                        <td>@item.TotalJobs</td>
+                        <td>@item.TotalDropPoint</td>
+                        @for (int j = 0; j < 15; j++)
+                        {
+                            if (j < item.descriptionPerJobs.Count())
+                            {
+                                <td>@item.descriptionPerJobs[j].DropPointPerJob</td>
+                            }
+                            else
+                            {
+                                <td></td>
+                            }
+                        }
+                        <td>@item.descriptionPerJobs.Select(p => p.HeSoTai).Sum()</td>
+                        <td>
+                            @{
+                                if (!String.IsNullOrEmpty(item.DriverIcNo))
+                                {
+                                    <a asp-action="DetailJobsOfDay" asp-route-driverIcNo="@item.DriverIcNo" asp-route-atdCompleteDate="@item.ATD_Date"><i class="fa fa-eye"></i></a>
+                                }
+                                else
+                                {
+                                    <a href="#" onclick="alert('Không thể xem do không có dữ liệu người dùng')" ><i class="fa fa-eye-slash"></i></a>
+                                }
+
+                            }
+                        </td>
+                    </tr>
+                    i++;
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+
+
+
+

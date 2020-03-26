@@ -1,0 +1,67 @@
+﻿@model IEnumerable<CalculateSalaryOfFleet.Models.Drivers>
+
+@{
+    ViewData["Title"] = "Danh sách chuyến hàng";
+    FleetsTripsContext ctx = new FleetsTripsContext();
+    string dateRerport = ctx.Orders.First().AtdcompleteDate.Month.ToString() + "/"+ ctx.Orders.First().AtdcompleteDate.Year.ToString();
+}
+
+<div style="text-align:center"><h2>Danh sách tài xế tham gia vận chuyển tháng&nbsp; @dateRerport</h2></div>
+<div class="container">
+    <table class="table table-responsive table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Mã tài xế</th>
+                <th scope="col">Tên tài xế</th>
+                <th scope="col">SDT</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            
+            @{
+                var i = 1;
+                foreach (var item in Model)
+                {
+                        <tr>
+                            <th scope="row">@i</th>
+                            <td>@item.DriverIcno</td>
+                            <td>@item.DriverName</td>
+                            <td>@item.DriverPhone</td>
+                            <td>
+                                <a name="viewAllJobsByDate" asp-action="GetAllJobs" asp-route-driverICNo="@item.DriverIcno" class="glyphicon glyphicon-eye-open"></a>
+                            </td>
+                        </tr>
+                    i++;
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+@*<script src="~/js/jquery.min.js"></script>
+<script lang="javascript">
+    $(function () {
+        $("a[name='viewAllJobsByDate']").click(function (e) {
+            e.preventDefault();
+            var startDate = $("input[name='dtpStart']").val();
+            var endDate = $("input[name='dtpEnd']").val();
+            var driverICNo = $("input[name='driverICNo1']").val(); 
+
+            $.ajax({
+                url: "/Drivers/GetAllJobs",
+                type: "GET",
+                contentType: "application/json; charset=utf-8",
+                data: { "driverICNo": driverICNo, "startDate": startDate, "endDate": endDate },
+                async: true,
+                success: function (data) {
+                    console.log(data);
+                }
+            });        
+        });
+    });
+</script>*@    
+
+
+

@@ -1,0 +1,40 @@
+﻿@model CalculateSalaryOfFleet.Models.MoneyByBigCar
+
+@{
+    ViewData["Title"] = "EditMoneyByBigCar";
+    Layout = "~/Views/Shared/_frontEnd.cshtml";
+}
+
+
+    <div class="container">
+        <h2>Chỉnh sửa</h2>
+
+        <h4>Chỉnh sửa số tiền đi theo xe lớn</h4>
+        <hr />
+        <div class="col-md-4">
+            <form asp-action="EditMoneyByBigCar">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="TripNo" />
+                <div class="form-group">
+                    <label asp-for="MoneyOfServiceLevelHcmc" class="control-label"></label>
+                    <input asp-for="MoneyOfServiceLevelHcmc" class="form-control" />
+                    <span asp-validation-for="MoneyOfServiceLevelHcmc" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="MoneyOfServiceLevelHcmp" class="control-label"></label>
+                    <input asp-for="MoneyOfServiceLevelHcmp" class="form-control" />
+                    <span asp-validation-for="MoneyOfServiceLevelHcmp" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-default" />
+                </div>
+            </form>
+            <div>
+                <a asp-action="Index">Back to List</a>
+            </div>
+        </div>
+        
+    </div>
+
+
+

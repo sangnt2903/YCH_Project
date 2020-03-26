@@ -1,0 +1,47 @@
+﻿@model CalculateSalaryOfFleet.Models.MoneyJob
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_frontEnd.cshtml";
+}
+
+
+    <div class="container">
+        <h2>Chỉnh sửa</h2>
+
+        <h4>Chỉnh sửa cấu hình tiền theo hiệu suất chuyến</h4>
+        <hr />
+        <div class="row">
+            <div class="col-md-4">
+                <form asp-action="EditMoneyByPerformance">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="Id" />
+                    <div class="form-group">
+                        <label asp-for="JobOrder" class="control-label"></label>
+                        <input asp-for="JobOrder" class="form-control" />
+                        <span asp-validation-for="JobOrder" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="DescriptionJobOrder" class="control-label"></label>
+                        <input asp-for="DescriptionJobOrder" class="form-control" />
+                        <span asp-validation-for="DescriptionJobOrder" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="PerformenceMoney" class="control-label"></label>
+                        <input asp-for="PerformenceMoney" class="form-control" />
+                        <span asp-validation-for="PerformenceMoney" class="text-danger"></span>
+                    </div>
+                    <div class="row">
+                        <span>
+                            <a asp-action="MoneyByPerformance" class="btn btn-warning">Quay lại trang</a>
+                        </span>
+                        <span class="form-group">
+                            <input type="submit" value="Lưu" class="btn btn-primary" />
+                        </span>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+    </div>

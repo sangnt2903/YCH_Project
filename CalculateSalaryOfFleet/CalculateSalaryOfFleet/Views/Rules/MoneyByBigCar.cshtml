@@ -1,0 +1,42 @@
+﻿@model IEnumerable<CalculateSalaryOfFleet.Models.MoneyByBigCar>
+
+@{
+    ViewData["Title"] = "MoneyByBigCar";
+    Layout = "~/Views/Shared/_frontEnd.cshtml";
+}
+
+    <div class="container">
+        <h2>Cấu hình tiền theo xe lớn</h2>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.MoneyOfServiceLevelHcmc)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.MoneyOfServiceLevelHcmp)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.MoneyOfServiceLevelHcmc)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.MoneyOfServiceLevelHcmp)
+                        </td>
+                        <td>
+                            <a asp-action="EditMoneyByBigCar" asp-route-id="@item.TripNo">Sửa</a> |
+                            <a asp-action="Delete" asp-route-id="@item.TripNo">Xóa</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+

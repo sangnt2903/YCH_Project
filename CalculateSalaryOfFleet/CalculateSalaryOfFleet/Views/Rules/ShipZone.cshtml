@@ -1,0 +1,44 @@
+﻿@model IEnumerable<CalculateSalaryOfFleet.Models.TypeJob>
+    @{
+        ViewData["Title"] = "ShipZone";
+        Layout = "~/Views/Shared/_frontEnd.cshtml";
+    }
+
+    <div style="text-align:center"><h2>CẤU HÌNH SHIPZONE</h2></div>
+
+    @*<div style="margin-bottom: 10px;text-align: center">
+            <a class="btn btn-primary" asp-action="Create"><i class="fa fa-plus"></i>&nbsp; Tạo mới</a>
+        </div>*@
+    <div class="container">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th style="text-align:center">
+                       Loại shipzone
+                    </th>
+                    <th style="text-align:center">
+                       Mô tả
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td style="text-align:center">
+                            @Html.DisplayFor(modelItem => item.TypeJob1)
+                        </td>
+                        <td style="text-align:center">
+                            @Html.DisplayFor(modelItem => item.TypeJobDescription)
+                        </td>
+                        <td style="text-align:center">
+                            @Html.ActionLink("Sửa", "EditShipZone", new { id = item.TypeJobNo }) |
+                            @Html.ActionLink("Xóa", "Delete", new { id = item.TypeJobNo })
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+

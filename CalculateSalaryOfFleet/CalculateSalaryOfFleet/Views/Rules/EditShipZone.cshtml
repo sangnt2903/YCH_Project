@@ -1,0 +1,38 @@
+﻿@model CalculateSalaryOfFleet.Models.TypeJob
+
+@{
+    ViewData["Title"] = "EditShipZone";
+    Layout = "~/Views/Shared/_frontEnd.cshtml";
+}
+
+    <div class="container">
+
+        <h2>Cấu hình</h2>
+
+        <h4>Cấu hình shipzone</h4>
+        <hr />
+        <div class="col-md-4">
+            <form asp-action="EditShipZone">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="TypeJobNo" />
+                <div class="form-group">
+                    <label asp-for="TypeJob1" class="control-label"></label>
+                    <input asp-for="TypeJob1" class="form-control" />
+                    <span asp-validation-for="TypeJob1" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="TypeJobDescription" class="control-label"></label>
+                    <input asp-for="TypeJobDescription" class="form-control" />
+                    <span asp-validation-for="TypeJobDescription" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Lưu" class="btn btn-default" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+<div>
+    <a asp-action="Index">Quay lại trang</a>
+</div>
+
