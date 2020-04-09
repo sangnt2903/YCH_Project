@@ -14,6 +14,6 @@ namespace CalculateSalaryOfFleet.Models
         public DateTime ATD_Date { get; set; }
         public int NumberOfDropPoint { get; set; }
         public double NumberOfTrips { get; set; }
-        public double Money { get; set; }
+        public long Money { get; set; }
     }
 }

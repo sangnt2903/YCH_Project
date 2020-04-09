@@ -12,6 +12,9 @@
             <thead>
                 <tr>
                     <th>
+                        Thứ tự chuyến
+                    </th>
+                    <th>
                         @Html.DisplayNameFor(model => model.MoneyOfServiceLevelHcmc)
                     </th>
                     <th>
@@ -23,7 +26,12 @@
             <tbody>
                 @foreach (var item in Model)
                 {
+                    var i = 1;
+
                     <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TripNo)
+                        </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.MoneyOfServiceLevelHcmc)
                         </td>
@@ -35,6 +43,7 @@
                             <a asp-action="Delete" asp-route-id="@item.TripNo">Xóa</a>
                         </td>
                     </tr>
+                    i++;
                 }
             </tbody>
         </table>

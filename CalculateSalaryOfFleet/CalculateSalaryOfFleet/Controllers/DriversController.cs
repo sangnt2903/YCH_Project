@@ -19,7 +19,7 @@ using OfficeOpenXml.Style;
 
 namespace CalculateSalaryOfFleet.Controllers
 {
-    public class DriversController : Controller
+    public class DriversController : CheckAuthenticateController
     {
         private readonly FleetsTripsContext _ctx;
         public DriversController(FleetsTripsContext ctx)
@@ -29,7 +29,7 @@ namespace CalculateSalaryOfFleet.Controllers
 
         public IActionResult Index()
         {
-            return View(_ctx.Drivers.ToList());
+            return View(_ctx.Drivers.Where(p=>p.DriverIcno != String.Empty).ToList());
         }
 
         public double CalculateTrip(int numberOfOrders,List<Rules> rules)

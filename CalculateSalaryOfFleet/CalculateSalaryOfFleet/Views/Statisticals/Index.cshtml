@@ -53,8 +53,9 @@
     </div>
 }
 
+
 <div class="container-fluid">
-    <table class="table table-responsive table-bordered">
+    <table id="datatable" class="display nowrap" style="width:100%">
         <thead class="thead-dark">
             <tr>
                 <th scope="col">#</th>
@@ -71,6 +72,7 @@
                     }
                 }
                 <th scope="col">Hệ số tài</th>
+                <th scope="col">Tổng tiền(VNĐ)</th>
                 <th>Xem chi tiết</th>
             </tr>
         </thead>
@@ -84,23 +86,24 @@
                         <th scope="row">@i</th>
                         <td>@item.DriverIcNo</td>
                         <td>@item.DriverName</td>
-                        <td>@item.TransportAgent</td>
-                        <td>@item.ATD_Date</td>
-                        <td>@item.TotalJobs</td>
-                        <td>@item.TotalDropPoint</td>
+                        <td style="text-align:center;">@item.TransportAgent</td>
+                        <td>@item.ATD_Date.ToString("dd/MM/yyyy")</td>
+                        <td style="text-align:center;">@item.TotalJobs</td>
+                        <td style="text-align:center;">@item.TotalDropPoint</td>
                         @for (int j = 0; j < 15; j++)
                         {
                             if (j < item.descriptionPerJobs.Count())
                             {
-                                <td>@item.descriptionPerJobs[j].DropPointPerJob</td>
+                                <td style="text-align:center">@item.descriptionPerJobs[j].DropPointPerJob</td>
                             }
                             else
                             {
                                 <td></td>
                             }
                         }
-                        <td>@item.descriptionPerJobs.Select(p => p.HeSoTai).Sum()</td>
-                        <td>
+                        <td style="text-align:center;">@item.descriptionPerJobs.Select(p => p.HeSoTai).Sum()</td>
+                        <td style="text-align:center;">@item.TotalMoney.ToString("##,#")</td>
+                        <td style="text-align:center;">
                             @{
                                 if (!String.IsNullOrEmpty(item.DriverIcNo))
                                 {
@@ -108,7 +111,7 @@
                                 }
                                 else
                                 {
-                                    <a href="#" onclick="alert('Không thể xem do không có dữ liệu người dùng')" ><i class="fa fa-eye-slash"></i></a>
+                                    <a href="#" onclick="alert('Không thể xem do không có dữ liệu tài xế')"><i class="fa fa-eye-slash"></i></a>
                                 }
 
                             }
@@ -118,9 +121,29 @@
                 }
             }
         </tbody>
+        <tfoot>
+            <tr>
+                <th style="text-align:center;">Tổng cộng: </th>
+
+                <th style="text-align:center;">@Model.Select(p => p.TotalMoney).Sum().ToString("##,#") đ</th>
+                @{
+                    for (int k = 0; k < 22; k++){
+                    <th style="text-align:center;"></th>
+                    }
+                }
+            </tr>
+        </tfoot>
     </table>
 </div>
 
+
+<script lang="text/javascript">
+    $(document).ready(function () {
+        $('#datatable').DataTable({
+                        "scrollX": true
+        });
+                });
+</script>
 
 
 

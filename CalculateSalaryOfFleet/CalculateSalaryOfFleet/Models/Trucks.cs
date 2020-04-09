@@ -13,6 +13,7 @@ namespace CalculateSalaryOfFleet.Models
         public string TruckId { get; set; }
         public string TruckType { get; set; }
 
+        public TruckSize TruckTypeNavigation { get; set; }
         public ICollection<Jobs> Jobs { get; set; }
     }
 }

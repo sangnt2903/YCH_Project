@@ -16,6 +16,11 @@
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input type="hidden" asp-for="TripNo" />
                 <div class="form-group">
+                    <label class="control-label">Thứ tự chuyến</label>
+                    <input asp-for="TripNo" class="form-control" disabled/>
+                    <span asp-validation-for="TripNo" class="text-danger"></span>
+                </div>
+                <div class="form-group">
                     <label asp-for="MoneyOfServiceLevelHcmc" class="control-label"></label>
                     <input asp-for="MoneyOfServiceLevelHcmc" class="form-control" />
                     <span asp-validation-for="MoneyOfServiceLevelHcmc" class="text-danger"></span>

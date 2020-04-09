@@ -3,12 +3,12 @@
 @{
     ViewData["Title"] = "Danh sách chuyến hàng";
     FleetsTripsContext ctx = new FleetsTripsContext();
-    string dateRerport = ctx.Orders.First().AtdcompleteDate.Month.ToString() + "/"+ ctx.Orders.First().AtdcompleteDate.Year.ToString();
+    string dateRerport = ctx.Orders.First().AtdcompleteDate.Month.ToString() + "/" + ctx.Orders.First().AtdcompleteDate.Year.ToString();
 }
 
-<div style="text-align:center"><h2>Danh sách tài xế tham gia vận chuyển tháng&nbsp; @dateRerport</h2></div>
+<div style="text-align:center"><h2>Danh sách tài xế tham gia vận chuyển</h2></div>
 <div class="container">
-    <table class="table table-responsive table-bordered">
+    <table id="datatable" class="display nowrap" width="100%">
         <thead class="thead-dark">
             <tr>
                 <th scope="col">#</th>
@@ -19,20 +19,20 @@
             </tr>
         </thead>
         <tbody>
-            
+
             @{
                 var i = 1;
                 foreach (var item in Model)
                 {
-                        <tr>
-                            <th scope="row">@i</th>
-                            <td>@item.DriverIcno</td>
-                            <td>@item.DriverName</td>
-                            <td>@item.DriverPhone</td>
-                            <td>
-                                <a name="viewAllJobsByDate" asp-action="GetAllJobs" asp-route-driverICNo="@item.DriverIcno" class="glyphicon glyphicon-eye-open"></a>
-                            </td>
-                        </tr>
+                    <tr>
+                        <th scope="row">@i</th>
+                        <td>@item.DriverIcno</td>
+                        <td>@item.DriverName</td>
+                        <td>@item.DriverPhone</td>
+                        <td>
+                            <a name="viewAllJobsByDate" asp-action="GetAllJobs" asp-route-driverICNo="@item.DriverIcno" class="glyphicon glyphicon-eye-open"></a>
+                        </td>
+                    </tr>
                     i++;
                 }
             }
@@ -40,28 +40,14 @@
     </table>
 </div>
 
-@*<script src="~/js/jquery.min.js"></script>
-<script lang="javascript">
-    $(function () {
-        $("a[name='viewAllJobsByDate']").click(function (e) {
-            e.preventDefault();
-            var startDate = $("input[name='dtpStart']").val();
-            var endDate = $("input[name='dtpEnd']").val();
-            var driverICNo = $("input[name='driverICNo1']").val(); 
-
-            $.ajax({
-                url: "/Drivers/GetAllJobs",
-                type: "GET",
-                contentType: "application/json; charset=utf-8",
-                data: { "driverICNo": driverICNo, "startDate": startDate, "endDate": endDate },
-                async: true,
-                success: function (data) {
-                    console.log(data);
-                }
-            });        
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#datatable').DataTable({
+            "scrollX": true
         });
     });
-</script>*@    
+</script>
 
 
 

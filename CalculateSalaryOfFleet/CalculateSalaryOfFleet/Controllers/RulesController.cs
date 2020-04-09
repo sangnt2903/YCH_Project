@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CalculateSalaryOfFleet.Controllers
 {
-    public class RulesController : Controller
+    public class RulesController : CheckAuthenticateController
     {
         private readonly FleetsTripsContext _ctx;
         public RulesController(FleetsTripsContext ctx)
@@ -17,6 +17,19 @@ namespace CalculateSalaryOfFleet.Controllers
         public IActionResult Index()
         {
             return View(_ctx.Rules.ToList());
+        }
+
+        public IActionResult CreateHST()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult CreateHST(Rules r)
+        {
+            _ctx.Rules.Add(r);
+            _ctx.SaveChanges();
+            return RedirectToAction("Index");
         }
 
         public IActionResult Edit(int id)
@@ -128,20 +141,47 @@ namespace CalculateSalaryOfFleet.Controllers
         }
         public IActionResult TruckWeightType()
         {
-            return View(_ctx.TruckWeightType.ToList());
+            var listTruckSize = from ts in _ctx.TruckSize
+                                join tst in _ctx.TruckSizeType on ts.TruckSizeId equals tst.TruckSizeId
+                                select new TruckSizeTypeModelView
+                                {
+                                    TruckType = ts.TruckType,
+                                    TruckSizeName = tst.TruckSizeName
+                                };
+            return View(listTruckSize.ToList());
         }
 
-        public IActionResult EditTruckWeightType(int id)
+        public IActionResult EditTruckWeightType(string truckType)
         {
-            return View(_ctx.TruckWeightType.Find(id));
+            ViewData["TruckSizeType"] = _ctx.TruckSizeType.ToList();
+            return View(_ctx.TruckSize.Find(truckType));
         }
 
         [HttpPost]
-        public IActionResult EditTruckWeightType(TruckWeightType truckWeightType)
+        public IActionResult EditTruckWeightType(TruckSize truckSize)
         {
-            TruckWeightType ruleUpdate = _ctx.TruckWeightType.Find(truckWeightType.TruckWeightTypeId);
-            ruleUpdate.WeightFrom = truckWeightType.WeightTo;
-            _ctx.TruckWeightType.Update(ruleUpdate);
+            TruckSize ruleUpdate = _ctx.TruckSize.Find(truckSize.TruckType);
+            ruleUpdate.TruckSizeId = truckSize.TruckSizeId;
+            _ctx.TruckSize.Update(ruleUpdate);
+            _ctx.SaveChanges();
+            return RedirectToAction("TruckWeightType");
+        }
+
+        public IActionResult CreateTruckSize()
+        {
+            ViewData["TruckSizeType"] = _ctx.TruckSizeType.ToList();
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult CreateTruckSize(TruckSize truckSize)
+        {
+            TruckSize truckSizeInsert = new TruckSize()
+            {
+                TruckType = truckSize.TruckType.ToUpper(),
+                TruckSizeId = truckSize.TruckSizeId
+            };
+            _ctx.TruckSize.Add(truckSizeInsert);
             _ctx.SaveChanges();
             return RedirectToAction("TruckWeightType");
         }

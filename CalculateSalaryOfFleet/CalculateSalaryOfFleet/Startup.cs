@@ -33,13 +33,15 @@ namespace CalculateSalaryOfFleet
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddDbContext<FleetsTripsContext>(option => option.UseSqlServer(Configuration.GetConnectionString("FT")));
+            services.AddDbContext<FleetsTripsContext>(option => option.UseSqlServer(Configuration.GetConnectionString("FTContext")));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddDistributedMemoryCache();
             services.AddSession(options => {
                 options.IdleTimeout = TimeSpan.FromHours(48);
             });
+            //services.Configure<DbConnectionInfo>(settings => Configuration.GetSection("ConnectionStrings").Bind(settings));
+            //services.AddScoped<FTContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

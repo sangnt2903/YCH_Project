@@ -1,4 +1,4 @@
-﻿@model IEnumerable<CalculateSalaryOfFleet.Models.TruckWeightType>
+﻿@model List<CalculateSalaryOfFleet.Models.TruckSizeTypeModelView>
 
 @{
     ViewData["Title"] = "TruckWeightType";
@@ -6,9 +6,11 @@
 }
 
 
-
     <div class="container">
         <h2>Chỉnh sửa tải trọng xe</h2>
+        <div>
+            <a class="btn btn-primary" asp-action="CreateTruckSize"><i class="fa fa-plus"></i> &nbsp; Thêm mới</a>
+        </div>
         <table class="table">
             <thead>
                 <tr>
@@ -16,10 +18,7 @@
                         Loại vận tải
                     </th>
                     <th>
-                        Tải trọng từ
-                    </th>
-                    <th>
-                        Tải trọng đến
+                        Kích cở
                     </th>
                     <th></th>
                 </tr>
@@ -29,17 +28,14 @@
                 {
                     <tr>
                         <td>
-                            @Html.DisplayFor(modelItem => item.TruckWeightType1)
+                            @Html.DisplayFor(modelItem => item.TruckType)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.WeightFrom)
+                            @Html.DisplayFor(modelItem => item.TruckSizeName)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.WeightTo)
-                        </td>
-                        <td>
-                            <a asp-action="EditTruckWeightType" asp-route-id="@item.TruckWeightTypeId">Sửa</a> |
-                            <a asp-action="#" asp-route-id="@item.TruckWeightTypeId">Xóa</a>
+                            <a asp-action="EditTruckWeightType" asp-route-truckType="@item.TruckType">Sửa</a>
+                            @*<a asp-action="#" asp-route-id="@item.TruckWeightTypeId">Xóa</a>*@
                         </td>
                     </tr>
                 }

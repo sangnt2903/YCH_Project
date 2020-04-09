@@ -1,4 +1,4 @@
-﻿@model CalculateSalaryOfFleet.Models.TruckWeightType
+﻿@model CalculateSalaryOfFleet.Models.TruckSize
 
 @{
     ViewData["Title"] = "EditTruckWeightType";
@@ -14,30 +14,29 @@
         <div class="col-md-4">
             <form asp-action="EditTruckWeightType">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <input type="hidden" asp-for="TruckWeightTypeId" />
+                <input type="hidden" asp-for="TruckType" />
                 <div class="form-group">
-                    <label asp-for="TruckWeightType1" class="control-label"></label>
-                    <input asp-for="TruckWeightType1" class="form-control" disabled />
-                    <span asp-validation-for="TruckWeightType1" class="text-danger"></span>
+                    <label class="control-label">Loại vận tải</label>
+                    <input asp-for="TruckType" value="@Model.TruckType" class="form-control" disabled/>
+                    <span asp-validation-for="TruckType" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="WeightFrom" class="control-label"></label>
-                    <input asp-for="WeightFrom" class="form-control" />
-                    <span asp-validation-for="WeightFrom" class="text-danger"></span>
+                    <select asp-for="TruckSizeId" class="input-sm">
+                        @foreach (var tr in ViewData["TruckSizeType"] as List<TruckSizeType>)
+                        {
+                            <option value="@tr.TruckSizeId">@tr.TruckSizeName</option>
+                        }
+                    </select>
                 </div>
                 <div class="form-group">
-                    <label asp-for="WeightTo" class="control-label"></label>
-                    <input asp-for="WeightTo" class="form-control" />
-                    <span asp-validation-for="WeightTo" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <input type="submit" value="Lưu" class="btn btn-default" />
+                    <a class="btn btn-warning" asp-action="Index">Trở lại trang</a>
+                    <input type="submit" value="Lưu" class="btn btn-primary" />
                 </div>
             </form>
         </div>
     </div>
 
 <div>
-    <a asp-action="Index">Trở lại trang</a>
+   
 </div>
 

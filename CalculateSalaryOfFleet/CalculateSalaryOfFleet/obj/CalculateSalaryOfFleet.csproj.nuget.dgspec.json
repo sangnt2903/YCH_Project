@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\ADMIN\\Desktop\\CalculateSalaryFleet\\CalculateSalaryOfFleet\\CalculateSalaryOfFleet\\CalculateSalaryOfFleet.csproj": {}
+    "C:\\Users\\ADMIN\\Desktop\\YCH\\YCH_Project_Report\\CalculateSalaryOfFleet\\CalculateSalaryOfFleet\\CalculateSalaryOfFleet.csproj": {}
   },
   "projects": {
-    "C:\\Users\\ADMIN\\Desktop\\CalculateSalaryFleet\\CalculateSalaryOfFleet\\CalculateSalaryOfFleet\\CalculateSalaryOfFleet.csproj": {
+    "C:\\Users\\ADMIN\\Desktop\\YCH\\YCH_Project_Report\\CalculateSalaryOfFleet\\CalculateSalaryOfFleet\\CalculateSalaryOfFleet.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\ADMIN\\Desktop\\CalculateSalaryFleet\\CalculateSalaryOfFleet\\CalculateSalaryOfFleet\\CalculateSalaryOfFleet.csproj",
+        "projectUniqueName": "C:\\Users\\ADMIN\\Desktop\\YCH\\YCH_Project_Report\\CalculateSalaryOfFleet\\CalculateSalaryOfFleet\\CalculateSalaryOfFleet.csproj",
         "projectName": "CalculateSalaryOfFleet",
-        "projectPath": "C:\\Users\\ADMIN\\Desktop\\CalculateSalaryFleet\\CalculateSalaryOfFleet\\CalculateSalaryOfFleet\\CalculateSalaryOfFleet.csproj",
+        "projectPath": "C:\\Users\\ADMIN\\Desktop\\YCH\\YCH_Project_Report\\CalculateSalaryOfFleet\\CalculateSalaryOfFleet\\CalculateSalaryOfFleet.csproj",
         "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\ADMIN\\Desktop\\CalculateSalaryFleet\\CalculateSalaryOfFleet\\CalculateSalaryOfFleet\\obj\\",
+        "outputPath": "C:\\Users\\ADMIN\\Desktop\\YCH\\YCH_Project_Report\\CalculateSalaryOfFleet\\CalculateSalaryOfFleet\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -78,7 +78,7 @@
             },
             "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
               "target": "Package",
-              "version": "[2.1.10, )"
+              "version": "[2.1.1, )"
             }
           },
           "imports": [

@@ -1,11 +1,13 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.Extensions.Options;
 
 namespace CalculateSalaryOfFleet.Models
 {
     public partial class FleetsTripsContext : DbContext
     {
+        private readonly string _connectionString;
         public FleetsTripsContext()
         {
         }
@@ -14,6 +16,11 @@ namespace CalculateSalaryOfFleet.Models
             : base(options)
         {
         }
+
+        //public FleetsTripsContext(IOptions<DbConnectionInfo> dbConnectionInfo)
+        //{
+        //    _connectionString = dbConnectionInfo.Value.FTContext;
+        //}
 
         public virtual DbSet<DeliveryCustomers> DeliveryCustomers { get; set; }
         public virtual DbSet<DesLocateException> DesLocateException { get; set; }
@@ -24,18 +31,22 @@ namespace CalculateSalaryOfFleet.Models
         public virtual DbSet<MoneyJob> MoneyJob { get; set; }
         public virtual DbSet<Orders> Orders { get; set; }
         public virtual DbSet<RawData> RawData { get; set; }
+        public virtual DbSet<Role> Role { get; set; }
         public virtual DbSet<Rules> Rules { get; set; }
         public virtual DbSet<ServiceLevel> ServiceLevel { get; set; }
         public virtual DbSet<Trucks> Trucks { get; set; }
+        public virtual DbSet<TruckSize> TruckSize { get; set; }
+        public virtual DbSet<TruckSizeType> TruckSizeType { get; set; }
         public virtual DbSet<TruckWeightType> TruckWeightType { get; set; }
         public virtual DbSet<TypeJob> TypeJob { get; set; }
+        public virtual DbSet<UserAccount> UserAccount { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=MSI\\SQL_EXPRESS;Database=FleetsTrips;Trusted_Connection=True;");
+            // To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Server=10.216.36.18;Database=FleetsTrips;User ID=triptest; Password= trip@123;");
             }
         }
 
@@ -227,6 +238,13 @@ namespace CalculateSalaryOfFleet.Models
                 entity.Property(e => e.TruckType).HasMaxLength(30);
             });
 
+            modelBuilder.Entity<Role>(entity =>
+            {
+                entity.Property(e => e.RoleName)
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
+            });
+
             modelBuilder.Entity<Rules>(entity =>
             {
                 entity.HasKey(e => e.RuleId);
@@ -255,6 +273,34 @@ namespace CalculateSalaryOfFleet.Models
                     .ValueGeneratedNever();
 
                 entity.Property(e => e.TruckType).HasMaxLength(30);
+
+                entity.HasOne(d => d.TruckTypeNavigation)
+                    .WithMany(p => p.Trucks)
+                    .HasForeignKey(d => d.TruckType)
+                    .HasConstraintName("FK_Trucks_TruckSize");
+            });
+
+            modelBuilder.Entity<TruckSize>(entity =>
+            {
+                entity.HasKey(e => e.TruckType);
+
+                entity.Property(e => e.TruckType)
+                    .HasMaxLength(30)
+                    .ValueGeneratedNever();
+
+                entity.HasOne(d => d.TruckSizeNavigation)
+                    .WithMany(p => p.TruckSize)
+                    .HasForeignKey(d => d.TruckSizeId)
+                    .HasConstraintName("FK_TruckSize_TruckSizeType");
+            });
+
+            modelBuilder.Entity<TruckSizeType>(entity =>
+            {
+                entity.HasKey(e => e.TruckSizeId);
+
+                entity.Property(e => e.TruckSizeName)
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<TruckWeightType>(entity =>
@@ -275,6 +321,31 @@ namespace CalculateSalaryOfFleet.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.TypeJobDescription).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<UserAccount>(entity =>
+            {
+                entity.HasKey(e => e.Username);
+
+                entity.Property(e => e.Username)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.CreatedAt)
+                    .HasColumnName("Created_at")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.Password)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Status).HasColumnName("status");
+
+                entity.HasOne(d => d.Role)
+                    .WithMany(p => p.UserAccount)
+                    .HasForeignKey(d => d.RoleId)
+                    .HasConstraintName("FK_UserAccount_Role");
             });
         }
     }

@@ -1,6 +1,7 @@
 ﻿@model IEnumerable<CalculateSalaryOfFleet.Models.Excels>
 
 @{
+    Layout = "~/Views/Shared/_frontEnd.cshtml";
     ViewData["Title"] = "Danh sách các file excel đã import";
 }
 
@@ -27,14 +28,12 @@
     </form>
 </div>
 <div>
-    <table class="table table-responsive table-bordered">
+    <table id="datatable" class="display nowrap" style="width:100%">
         <thead class="thead-dark">
             <tr>
                 <th scope="col" class="col-md-1">#</th>
                 <th scope="col" class="col-md-6">Tên file</th>
                 <th scope="col" class="col-md-3">Ngày import</th>
-                <th scope="col" class="col-md-2">Import dữ liệu</th>
-                
             </tr>
         </thead>
         <tbody>
@@ -45,8 +44,7 @@
                     <tr>
                         <th scope="row">@i</th>
                         <td>@item.ExcelFileName</td>
-                        <td>@item.ExcelUploadedDate.Value.ToShortDateString()</td>  
-                        <td><a asp-action="ImportRawData" asp-route-excelCode="@item.ExcelCode" class="glyphicon glyphicon-import"></a></td>  
+                        <td>@item.ExcelUploadedDate.Value.ToShortDateString()</td>
                     </tr>
                     i++;
                 }
@@ -56,3 +54,11 @@
 </div>
 
 
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#datatable').DataTable({
+            "scrollX": true
+        });
+    });
+</script>

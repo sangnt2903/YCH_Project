@@ -13,6 +13,7 @@ namespace CalculateSalaryOfFleet.Models
         public DateTime ATD_Date { get; set; }
         public int TotalJobs { get; set; }
         public int TotalDropPoint { get; set; }
+        public long TotalMoney { get; set; }
         public List<DescriptionPerJob> descriptionPerJobs { get; set; }
     }
 }

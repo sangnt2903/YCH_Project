@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -7,6 +9,7 @@
 
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
     <!-- bootstrap-css -->
     <link rel="stylesheet" href="~/css/bootstrap.min.css">
     <!-- //bootstrap-css -->
@@ -25,28 +28,53 @@
         <nav class="navbar navbar-inverse">
             <div class="container-fluid">
                 <div class="navbar-header">
-                    <a class="navbar-brand" href="#">YCH</a>
+                    <a class="navbar-brand" asp-controller="Excels" asp-action="Index">YCH</a>
                 </div>
-                <ul class="nav navbar-nav">
-                    <li><a asp-controller="Excels" asp-action="Index">Upload Excel</a></li>
-                    <li><a asp-controller="Drivers" asp-action="Index">Danh sách tài xế</a></li>
-                    <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                            Cấu hình hệ số
-                            <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a asp-controller="Rules" asp-action="Index">Cấu hình hệ số tài</a></li>
-                            <li><a asp-controller="Rules" asp-action="MoneyByPerformance">Cấu hình tiền theo hiệu suất chuyến</a></li>
-                            <li><a asp-controller="Rules" asp-action="ShipZone">Cấu hình Shipzone</a></li>
-                            <li><a asp-controller="Rules" asp-action="MoneyByBigCar">Cấu hình tiền theo xe lớn</a></li>
-                            <li><a asp-controller="Rules" asp-action="DesLocateException">Cấu hình tiền theo địa điểm ngoại lệ</a></li>
-                            <li><a asp-controller="Rules" asp-action="TruckWeightType">Cấu hình tải trọng xe</a></li>
-                        </ul>
-                    </li>
-                    
-                    <li><a asp-controller="Statisticals" asp-action="Index">Báo cáo/ Thống kê</a></li>
-                </ul>
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                        <li><a asp-controller="Excels" asp-action="Index">Upload Excel</a></li>
+                        <li><a asp-controller="Drivers" asp-action="Index">Danh sách tài xế</a></li>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                Cấu hình hệ số
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a asp-controller="Rules" asp-action="Index">Cấu hình hệ số tài (Cho xe nhỏ)</a></li>
+                                <li><a asp-controller="Rules" asp-action="MoneyByPerformance">Cấu hình tiền theo hiệu suất chuyến(Cho xe nhỏ)</a></li>
+                                <li><a asp-controller="Rules" asp-action="ShipZone">Cấu hình Service Level (Cho xe lớn)</a></li>
+                                <li><a asp-controller="Rules" asp-action="MoneyByBigCar">Cấu hình tiền theo xe lớn</a></li>
+                                <li><a asp-controller="Rules" asp-action="DesLocateException">Cấu hình tiền theo địa điểm ngoại lệ (Cho xe nhỏ)</a></li>
+                                <li><a asp-controller="Rules" asp-action="TruckWeightType">Cấu hình tải trọng xe</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a asp-controller="Statisticals" asp-action="Index">Báo cáo/ Thống kê</a>
+                        </li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        @if (Context.Session.GetString("_") != null)
+                        {
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown">Hello @Context.Session.GetString("_").Split("-")[0] !
+                                    <span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a asp-controller="Auth" asp-action="ChangePassword">Đổi mật khẩu</a></li>
+                                    @if (@Context.Session.GetString("_").Split("-")[1] == "Admin")
+                                    {
+                                        <li><a asp-controller="Auth" asp-action="ManageUsers">Quản lý tài khoản</a></li>
+                                    }
+                                    <li><a asp-controller="Auth" asp-action="Logout">Đăng xuất</a></li>
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <li><a asp-action="Login" asp-controller="Auth">Đăng nhập</a></li>
+                        }
+                    </ul>
+                </div>
             </div>
         </nav>
         @RenderBody()
@@ -55,6 +83,8 @@
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
+
 </body>
 </html>
 

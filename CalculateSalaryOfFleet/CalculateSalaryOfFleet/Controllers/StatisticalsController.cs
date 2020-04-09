@@ -16,7 +16,7 @@ using OfficeOpenXml.Style;
 
 namespace CalculateSalaryOfFleet.Controllers
 {
-    public class StatisticalsController : Controller
+    public class StatisticalsController : CheckAuthenticateController
     {
         private readonly FleetsTripsContext _ctx;
         public StatisticalsController(FleetsTripsContext ctx)
@@ -65,12 +65,12 @@ namespace CalculateSalaryOfFleet.Controllers
             }
             return 0;
         }
-        public long CalculateMoney(double totalTrip, List<MoneyJob> money, List<Rules> rulesMoney, List<MoneyByBigCar> moneyByBigCar, List<TypeJob> typeJobs, List<TruckWeightType> truckWeightTypes, int jobOrder, bool isFar, string truckType, string serviceLevel) //jobOrder : thứ tự job
+        public long CalculateMoney(double totalTrip, List<MoneyJob> money, List<Rules> rulesMoney, List<MoneyByBigCar> moneyByBigCar, List<TypeJob> typeJobs, List<TruckWeightType> truckWeightTypes, List<TruckSize> truckSizes, int jobOrder, bool isFar, string truckType, string serviceLevel) //jobOrder : thứ tự job
         {
             long result = 0;
             if (!String.IsNullOrEmpty(truckType))
             {
-                if(Convert.ToDouble(truckType.Split("T")[0].ToString())<= truckWeightTypes.SingleOrDefault(p=>p.TruckWeightType1 == "XE NHO").WeightTo) // Xe nhỏ
+                if(truckSizes.SingleOrDefault(p=> p.TruckType == truckType).TruckSizeId == 1) // 1: small truck 2: big truck 3: container
                 {
                     if (isFar)
                     {
@@ -88,7 +88,7 @@ namespace CalculateSalaryOfFleet.Controllers
                         }
                     }
                 }
-                else if(Convert.ToDouble(truckType.Split("T")[0].ToString()) > truckWeightTypes.SingleOrDefault(p => p.TruckWeightType1 == "XE LON").WeightFrom && Convert.ToDouble(truckType.Split("T")[0].ToString()) <= truckWeightTypes.SingleOrDefault(p => p.TruckWeightType1 == "XE LON").WeightTo) // Xe lớn
+                else if(truckSizes.SingleOrDefault(p => p.TruckType == truckType).TruckSizeId == 2) // Xe lớn
                 {
                     if (jobOrder == 1)
                     {
@@ -518,12 +518,19 @@ namespace CalculateSalaryOfFleet.Controllers
                            descriptionPerJobs = null,
                        };
 
-            foreach (var item in data.ToList())
+            
+            foreach (var i in data.ToList())
             {
-                item.descriptionPerJobs = GetDescriptionPerJobs(item.TransportAgent, item.DriverIcNo, item.ATD_Date);
-                results.Add(item);
-            }
+                long totalMoney = 0;
+                foreach (var j in ListToCalculateMoney(i.DriverIcNo, i.ATD_Date))
+                {
+                    totalMoney += j.Money;
+                }
 
+                i.TotalMoney = totalMoney;
+                i.descriptionPerJobs = GetDescriptionPerJobs(i.TransportAgent, i.DriverIcNo, i.ATD_Date);
+                results.Add(i);
+            } 
 
             HttpContext.Session.SetString("filter", filter);
             HttpContext.Session.SetComplexData("listData", results);
@@ -537,6 +544,7 @@ namespace CalculateSalaryOfFleet.Controllers
             List<MoneyByBigCar> moneyByBigCars = _ctx.MoneyByBigCar.OrderBy(p => p.TripNo).ToList();
             List<TypeJob> typeJobs = _ctx.TypeJob.ToList();
             List<TruckWeightType> truckWeightTypes = _ctx.TruckWeightType.ToList();
+            List<TruckSize> truckSizes = _ctx.TruckSize.ToList();
 
             var groupList = from ord in _ctx.Orders
                             join jb in _ctx.Jobs on ord.JobNo equals jb.JobNo
@@ -574,13 +582,64 @@ namespace CalculateSalaryOfFleet.Controllers
             for (int i = 0; i < results.Count(); i++)
             {
                 bool isFar = checkJobAddressFar(groupList.Distinct().ToList(), desLocateExceptions, String.Empty, i);
-                results[i].Money = CalculateMoney(res.ToList()[i].NumberOfTrips, money, rules, moneyByBigCars, typeJobs, truckWeightTypes, i + 1, isFar, results[i].TruckType, results[i].ServiceLevel); // 1: job đầu, 2: job sau
+                results[i].Money = CalculateMoney(res.ToList()[i].NumberOfTrips, money, rules, moneyByBigCars, typeJobs, truckWeightTypes, truckSizes, i + 1, isFar, results[i].TruckType, results[i].ServiceLevel); // 1: job đầu, 2: job sau
             }
 
             Drivers driver = _ctx.Drivers.SingleOrDefault(p => p.DriverIcno == driverIcNo);
             string driverString = driverIcNo + "-" + driver.DriverName;
             ViewBag.driver = driverString;
             return View(results);
+        }
+
+        public List<JobModelView> ListToCalculateMoney(string driverIcNo, DateTime atdCompleteDate)
+        {
+            List<Rules> rules = _ctx.Rules.OrderBy(p => p.RuleNumber).ToList();
+            List<MoneyJob> money = _ctx.MoneyJob.OrderBy(p => p.PerformenceMoney).ToList();
+            List<MoneyByBigCar> moneyByBigCars = _ctx.MoneyByBigCar.OrderBy(p => p.TripNo).ToList();
+            List<TypeJob> typeJobs = _ctx.TypeJob.ToList();
+            List<TruckWeightType> truckWeightTypes = _ctx.TruckWeightType.ToList();
+            List<TruckSize> truckSizes = _ctx.TruckSize.ToList();
+
+            var groupList = from ord in _ctx.Orders
+                            join jb in _ctx.Jobs on ord.JobNo equals jb.JobNo
+                            join dr in _ctx.Drivers on jb.DriverIcno equals dr.DriverIcno
+                            join tr in _ctx.Trucks on jb.TruckId equals tr.TruckId
+                            join dc in _ctx.DeliveryCustomers on ord.DeliveryCustCode equals dc.DeliveryCustCode
+                            where jb.DriverIcno == driverIcNo && ord.AtdcompleteDate == atdCompleteDate
+                            select new JobViewModelGroup
+                            {
+                                DriverIcNo = dr.DriverIcno,
+                                JobNo = jb.JobNo,
+                                ATD_Date = ord.AtdcompleteDate,
+                                TruckId = jb.TruckId,
+                                TruckType = tr.TruckType,
+                                DeliveryCustCode = ord.DeliveryCustCode,
+                                ServiceLevel = dc.ServiceLevel
+                            };
+
+            var res = from r in groupList
+                      group r by new { r.DriverIcNo, r.JobNo, r.TruckId, r.TruckType, r.ATD_Date, r.ServiceLevel } into rGroup
+                      select new JobModelView
+                      {
+                          JobNo = rGroup.Key.JobNo,
+                          TruckId = rGroup.Key.TruckId,
+                          TruckType = rGroup.Key.TruckType,
+                          ATD_Date = rGroup.Key.ATD_Date,
+                          ServiceLevel = rGroup.Key.ServiceLevel,
+                          NumberOfDropPoint = rGroup.Select(p => p.DeliveryCustCode).Distinct().Count(),
+                          NumberOfTrips = CalculateTrip(rGroup.Select(p => p.DeliveryCustCode).Distinct().Count(), rules),
+                          Money = 0
+                      };
+
+            List<JobModelView> results = res.ToList();
+            List<DesLocateException> desLocateExceptions = _ctx.DesLocateException.ToList();
+            for (int i = 0; i < results.Count(); i++)
+            {
+                bool isFar = checkJobAddressFar(groupList.Distinct().ToList(), desLocateExceptions, String.Empty, i);
+                results[i].Money = CalculateMoney(res.ToList()[i].NumberOfTrips, money, rules, moneyByBigCars, typeJobs, truckWeightTypes, truckSizes, i + 1, isFar, results[i].TruckType, results[i].ServiceLevel); // 1: job đầu, 2: job sau
+            }
+
+            return results;
         }
 
         public bool checkJobAddressFar(List<JobViewModelGroup> groupList, List<DesLocateException> desLocateExceptions, string jobNo, int index)
@@ -613,11 +672,14 @@ namespace CalculateSalaryOfFleet.Controllers
         public IActionResult ExportReportToExcel()
         {
             List<DataResult> dataReport = listReport;
+            DateTime ReportFrom = listReport.FirstOrDefault().ATD_Date;
+            DateTime ReportTo = listReport.LastOrDefault().ATD_Date;
             //xuất ra excel dùng eplus
             var stream = new MemoryStream();
             using (var package = new ExcelPackage(stream))
             {
                 var worksheet = package.Workbook.Worksheets.Add("DynamicReport");
+                worksheet.Cells[3, 1].Value = "Báo cáo từ ngày " + ReportFrom.ToString("dd/MM/yyyy") + " đến ngày " + ReportTo.ToString("dd/MM/yyyy");
 
                 //custome size
                 worksheet.Row(4).Height = 20;
@@ -625,18 +687,25 @@ namespace CalculateSalaryOfFleet.Controllers
                 worksheet.Column(2).Width = 20;
                 worksheet.Column(3).Width = 20;
                 worksheet.Column(4).Width = 20;
-                worksheet.Column(5).Width = 15;
-                worksheet.Column(6).Width = 15;
+                worksheet.Column(5).Width = 20;
+                for (int i = 6; i <= 24; i++)
+                {
+                    worksheet.Column(i).Width = 30;
+                    worksheet.Column(i).Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                  
+                }
 
                 //custom text
-                worksheet.Column(1).Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                worksheet.Column(4).Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                worksheet.Column(5).Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                worksheet.Column(6).Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                for (int i = 1; i < 24; i++)
+                {
+                    if(i!=2 || i!=3 || i!=5)
+                    worksheet.Column(i).Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                }
+                
 
                 //custom color
                 Color colFromHex = System.Drawing.ColorTranslator.FromHtml("#108f14");
-                for (int i = 1; i <= 6; i++)
+                for (int i = 1; i <= 24; i++)
                 {
                     worksheet.Cells[4, i].Style.Fill.PatternType = ExcelFillStyle.Solid;
                     worksheet.Cells[4, i].Style.Fill.BackgroundColor.SetColor(colFromHex);
@@ -649,9 +718,16 @@ namespace CalculateSalaryOfFleet.Controllers
                 worksheet.Cells[4, 1].Value = "STT";
                 worksheet.Cells[4, 2].Value = "Số điện thoại";
                 worksheet.Cells[4, 3].Value = "Tên tài xế";
-                worksheet.Cells[4, 4].Value = "Tổng số Jobs";
-                worksheet.Cells[4, 5].Value = "Tổng số điểm giao/ Tổng số Jobs";
-                worksheet.Cells[4, 6].Value = "Tổng Trip";
+                worksheet.Cells[4, 4].Value = "Đơn vị vận chuyển";
+                worksheet.Cells[4, 5].Value = "Ngày";
+                worksheet.Cells[4, 6].Value = "Tổng số chuyến";
+                worksheet.Cells[4, 7].Value = "Tổng số điểm giao";
+                for (int i = 0; i < 15; i++)
+                {
+                    worksheet.Cells[4, i + 8].Value = "Số điểm giao Job #"+(i+1).ToString();
+                }
+                worksheet.Cells[4, 23].Value = "Hệ số tài";
+                worksheet.Cells[4, 24].Value = "Tổng tiền";
 
                 //body of table  
                 //  
@@ -662,7 +738,16 @@ namespace CalculateSalaryOfFleet.Controllers
                     worksheet.Cells[recordindex, 1].Value = idx;
                     worksheet.Cells[recordindex, 2].Value = data.DriverIcNo;
                     worksheet.Cells[recordindex, 3].Value = data.DriverName;
-
+                    worksheet.Cells[recordindex, 4].Value = data.TransportAgent;
+                    worksheet.Cells[recordindex, 5].Value = data.ATD_Date.ToString("dd/MM/yyyy");
+                    worksheet.Cells[recordindex, 6].Value = data.TotalJobs;
+                    worksheet.Cells[recordindex, 7].Value = data.TotalDropPoint;
+                    for (int i = 0; i < data.descriptionPerJobs.Count(); i++)
+                    {
+                        worksheet.Cells[recordindex, i + 8].Value = data.descriptionPerJobs[i].DropPointPerJob;
+                    }
+                    worksheet.Cells[recordindex, 23].Value = data.descriptionPerJobs.Select(p=>p.HeSoTai).Sum();
+                    worksheet.Cells[recordindex, 24].Value = data.TotalMoney.ToString("##,#");
                     recordindex++;
                     idx++;
                 }

@@ -39,50 +39,51 @@
             </tr>
         </tbody>
     </table>
+    <hr />
 </div>
 
 @if (Model.Count() > 0)
 {
-<div class="container">
-    <table class="table table-responsive table-bordered">
-        <thead class="thead-dark">
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Mã chuyến</th>
-                <th scope="col">Loại xe</th>
-                <th scope="col">Shipzone</th>
-                <th scope="col">Ngày giao hàng</th>
-                <th scope="col">Số drop point</th>
-                <th scope="col">Hệ số tài</th>
-                <th scope="col"> Thành tiền (VNĐ)</th>
-            </tr>
-        </thead>
-        <tbody>
-            @{
-                var i = 1;
-                foreach (var item in Model)
-                {
+    <div class="container">
+        <table id="datatable" class="display nowrap" width="100%">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Mã chuyến</th>
+                    <th scope="col">Loại xe</th>
+                    <th scope="col">Service level</th>
+                    <th scope="col">Ngày giao hàng</th>
+                    <th scope="col">Số drop point</th>
+                    <th scope="col">Hệ số tài</th>
+                    <th scope="col"> Thành tiền (VNĐ)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    var i = 1;
+                    foreach (var item in Model)
+                    {
                         <tr>
                             <th scope="row">@i</th>
                             <td>@item.JobNo</td>
                             <td>@item.TruckType</td>
-                            <td>@item.ServiceLevel</td>
-                            <td>@item.ATD_Date.ToString("dd/MM/yyyy")</td>
-                            <td>@item.NumberOfDropPoint</td>
-                            <td>@item.NumberOfTrips</td>
-                            <td>@item.Money.ToString("##,#")</td>
+                            <td style="text-align:center;">@item.ServiceLevel</td>
+                            <td style="text-align:center;">@item.ATD_Date.ToString("dd/MM/yyyy")</td>
+                            <td style="text-align:center;">@item.NumberOfDropPoint</td>
+                            <td style="text-align:center;">@item.NumberOfTrips</td>
+                            <td style="text-align:center;">@item.Money.ToString("##,#")</td>
                         </tr>
-                    i++;
+                        i++;
+                    }
                 }
-            }
-        </tbody>
-    </table>
-    <hr class="" />
-    <div class="container" style="text-align:end;">
-        <h3>Tổng cộng : @Model.Select(p => p.Money).Sum().ToString("##,#") đ</h3>
+            </tbody>
+        </table>
+        <hr class="" />
+        <div class="container" style="text-align:end;">
+            <h3>Tổng cộng : @Model.Select(p => p.Money).Sum().ToString("##,#") đ</h3>
+        </div>
     </div>
-</div>
-    
+
 }
 else
 {
@@ -102,3 +103,11 @@ else
 }
 
 
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#datatable').DataTable({
+            "scrollX": true
+        });
+    });
+</script>
